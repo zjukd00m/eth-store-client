@@ -4,6 +4,16 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "i.seadn.io",
+        port: "",
+        pathname: "/gae/*",
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;

@@ -4,6 +4,7 @@ export default function useAuth() {
     const [wallet, setWallet] = useState("");
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+    // Authenticate the user on active connection from the wallet to the app
     useEffect(() => {
         (async () => {
             const account = await window.ethereum.request({  method: "eth_accounts" });
@@ -14,6 +15,17 @@ export default function useAuth() {
             }
         })();
     }, []);
+
+    // Listen for changes in the account (on change), when there's no account
+    // then reset the authentication state
+    useEffect(() => {
+        window.ethereum.on("accountsChanged", (accounts: string[]) => {
+            if (!accounts?.length) {
+                setWallet("");
+                setIsAuthenticated(false);
+            }
+        });
+    })
 
     async function login() {
         try {

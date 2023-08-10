@@ -41,51 +41,43 @@ export default function GlobalLayout(props: GlobalLayoutProps) {
   const { children } = props;
   const { isAuthenticated } = useAuth();
 
-  console.log({ isAuthenticated })
 
   return (
-    <div className="grid grid-rows-1 w-screen text-black">
-      <div
-        className="grid h-full gap-3"
-        style={{
-          gridTemplateColumns: "auto 1fr",
-        }}
-      >
+    <div className="w-screen h-screen text-black bg-[#ECEFF4] overflow-y-hidden box-border">
+      <div className="h-full w-full grid grid-rows-1 grid-cols-12">
         {/* Sidebar */}
-        <div className="w-full">
-          <div className="bg-[#292c2b] px-8 py-5 h-full text-[#f7f5f3]">
-            <ul className="flex flex-col gap-6">
-              {sidebarItems.map((item, index) => (
-                <Dropdown
-                  key={index}
-                  title={item.name}
-                  options={item.options}
-                  url={item.url}
-                  open={true}
-                />
-              ))}
-            </ul>
-              <div className="absolute bottom-5">
-                {
-                  isAuthenticated ? (
-                    <button
-                      style={{
-                        borderRadius: "10px",
-                        backgroundColor: "var(--bg-dracula-green)",
-                        padding: "0.5rem 0.8rem",
-                        color: "black",
-                        fontSize: "14px",
-                      }}
-                    >
-                      Disconnect
-                    </button>
-                  ) : null
-                }
-              </div>
+        <div className="bg-[#292c2b] px-8 py-5 h-full text-[#f7f5f3]">
+          <ul className="flex flex-col gap-6">
+            {sidebarItems.map((item, index) => (
+              <Dropdown
+                key={index}
+                title={item.name}
+                options={item.options}
+                url={item.url}
+                open={true}
+              />
+            ))}
+          </ul>
+            <div className="absolute bottom-5">
+              {
+                isAuthenticated ? (
+                  <button
+                    style={{
+                      borderRadius: "10px",
+                      backgroundColor: "var(--bg-dracula-green)",
+                      padding: "0.5rem 0.8rem",
+                      color: "black",
+                      fontSize: "14px",
+                    }}
+                  >
+                    Disconnect
+                  </button>
+                ) : null
+              }
             </div>
-        </div>
+          </div>
         {/* Content */}
-        <div className="h-screen px-[60px] py-[30px]">{children}</div>
+        <div className="px-[60px] pt-[20px] w-full col-span-11 overflow-y-auto">{children}</div>
       </div>
     </div>
   );
