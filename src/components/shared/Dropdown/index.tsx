@@ -20,24 +20,33 @@ export default function Dropdown(props: IPropsDropdown) {
   const [isOpen, setIsOpen] = useState(open);
 
   return (
-    <div className="">
+    <div className="w-full">
       <div className={`
         flex 
-        items-baseline
-        ${title !== "Dashboard" ? "justify-start" : "justify-between mb-12"}
+        items-center
+        w-full
+        ${title !== "Dashboard" ? null : "mb-12"}
       `}>
-        <div className="flex items-baseline justify-start gap-5 w-full">
-          { title !== "Dashboard" ? <div> { icon } </div> : null }
-          <p
-            className={`
-              font-semibold
-              ${title !== "Dashboard" ? `text-[14px]` : `text-[22px] font-bold`}
-              ${!isSidebarOpen ? "hidden" : null}`
-            }
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {title}
-          </p>
+        <div className={`flex items-center justify-start gap-5 ${isSidebarOpen ? "w-full" : null }`}>
+          { 
+            title !== "Dashboard" ? (
+              <div className={`p-1`}> { icon } </div> 
+            ) : null 
+          }
+          {
+            isSidebarOpen ? (
+              <p
+                className={`
+                  font-semibold
+                  ${title !== "Dashboard" ? `text-[14px]` : `text-[22px] font-bold`}
+                  `
+                }
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                {title}
+              </p>
+            ) : null 
+          }
         </div>
         {
           title === "Dashboard" && isSidebarOpen ? (

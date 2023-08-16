@@ -56,9 +56,15 @@ export default function GlobalLayout(props: GlobalLayoutProps) {
             h-full 
             text-[#f7f5f3] 
             relative
-            ${isSidebarOpen ? "w-full col-span-2" : "w-3 col-span-1"} 
+            ${isSidebarOpen ? "w-full col-span-2" : "w-fit col-span-1"} 
           `}>
-          <ul className="flex flex-col gap-6 items-flex-start">
+          <ul className={`
+            flex 
+            flex-col 
+            items-flex-start
+            ${isSidebarOpen ? "gap-6" : "gap-[3rem]"}
+            `
+          }>
             {sidebarItems.map((item, index) => (
               <Dropdown
                 key={index}
@@ -75,7 +81,7 @@ export default function GlobalLayout(props: GlobalLayoutProps) {
             <div className="absolute bottom-10 left-8 right-8">
               {
                 isAuthenticated ? (
-                  <div className="relative flex items-center">
+                  <div className={`relative flex items-center ${isSidebarOpen ? "border-[1px] border-white rounded-md" : null}`}>
                     <PoweroffOutlined 
                       className={`
                         text-[18px] 
@@ -87,15 +93,13 @@ export default function GlobalLayout(props: GlobalLayoutProps) {
                       className="w-full"
                       style={{
                         borderRadius: "10px",
-                        backgroundColor: "var(--bg-dracula-green)",
+                        backgroundColor: "transparent",
                         padding: "0.5rem 0.8rem",
-                        color: "black",
-                        fontSize: "14px",
                       }}
                     >
                       {
                         isSidebarOpen ? (
-                          <p>
+                          <p className="font-[500] text-[14px] text-white">
                             Disconnect
                           </p>
                         ) : null
