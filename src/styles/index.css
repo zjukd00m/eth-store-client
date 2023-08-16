@@ -1,0 +1,19 @@
+.line-after {
+    position: relative;
+    cursor: pointer;
+}
+
+.line-after::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 0%;
+    border-bottom: 1px solid white;
+    transition: 0.5s ease-in-out;
+}
+
+.line-after:hover::after {
+    width: 50%;
+}
