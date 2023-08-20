@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { PlusSquareOutlined } from "@ant-design/icons";
+import { CreateERC721Collectible } from "@/components/collectibles/create/ERC721Collectible";
+import CreateCollection from "@/components/collections/create/Collections";
 
 type CollectibleType = "ERC721" | "ERC1155";
 type BlockchainType = "Ethereum" | "Polygon";
@@ -13,133 +15,11 @@ interface CreateCollectibleData {
     type: CollectibleType;
 }
 
-export function CreateERC721CollectibleView({
-    premintEnabled
-}: {
-    premintEnabled: boolean;
-}) {
 
-    return (
-        <div className="flex gap-5">
-            <div className="w-full mx-[60px]">
-                <div className="">
-                    <input 
-                        type="file"
-                        className="bg-red-100 h-[30rem] w-[30rem]"
-                    />
-                </div>
-                <div className="border-[1px] border-[#4C566A] rounded-sm p-5">
-                    <p className="text-[16px] mb-6 uppercase"> Mint Settings </p>
-                    <div className="flex items-center justify-between">
-                        <div className="">
-                            <p className="text-md mb-2"> Name </p>
-                            <input
-                                className="text-sm p-1 rounded-md px-3 bg-input"
-                            />
-                        </div>
-                        <div className="">
-                            <p className="text-md mb-2"> Symbol </p>
-                            <input
-                                className="text-sm p-1 rounded-md px-3 bg-input"
-                            />
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <div className="mt-6">
-                            <p className="text-md mb-2"> Supply </p>
-                            <input
-                                type="number"
-                                className="text-sm p-1 rounded-md px-3 bg-input"
-                                min={1}
-                            />
-                        </div>
-                        <div className="mt-6">
-                            <p className="text-md mb-2"> Mint price (wei) </p>
-                            <input
-                                type="number"
-                                className="text-sm p-1 rounded-md px-3 bg-input"
-                                min={0}
-                            />
-                        </div>
-                    </div>
-                    <div className="mt-6">
-                        <p className="text-md mb-2"> Mint date </p>
-                        <input
-                            type="date"
-                            className="text-sm p-1 rounded-md px-3 bg-input"
-                        />
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <div className="mt-6">
-                            <p className="text-md mb-2"> Max collectibles per wallet </p>
-                            <input
-                                type="number"
-                                className="text-sm p-1 rounded-md px-3 bg-input"
-                                min={0}
-                            />
-                        </div>
-                        <div className="mt-6">
-                            <p className="text-md mb-2"> Hidden </p>
-                            <input
-                                type="checkbox"
-                                className="text-sm p-1 rounded-md px-3 bg-input"
-                            />
-                            <input
-                                type="file"
-                                className="text-sm p1 rounded-md px-3"
-                            />
-                        </div>
-                    </div>
-                </div>
-                {
-                    premintEnabled ? (
-                        <div className="">
-                           <div className="">
-                                <p className="text-md mb-2"> Pre-mint price </p>
-                                <input
-                                    type="number"
-                                    className=""
-                                    min={0}
-                                />
-                            </div>
-                           <div className="">
-                                <p className="text-md mb-2"> Pre-mint collectibles limit </p>
-                                <input
-                                    type="number"
-                                    className=""
-                                    min={0}
-                                />
-                            </div>
-                           <div className="">
-                                <p className="text-md mb-2"> Pre-mint max collectibles per wallet </p>
-                                <input
-                                    type="number"
-                                    className="text-sm p-1 rounded-md px-3"
-                                    min={0}
-                                />
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <div className="">
-                                    <p className="text-md mb-2"> Pre-mint start date </p>
-                                    <input
-                                        type="date"
-                                        className="text-sm p-1 rounded-md px-3"
-                                    />
-                                </div>
-                                <div className="">
-                                    <p className="text-md mb-2"> Pre-mint end date </p>
-                                    <input
-                                        type="date"
-                                        className="text-sm p-1 rounded-md px-3"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    ) : null
-                }
-            </div>
-        </div>
-    )
+interface ICreateCollection {
+    name: string;
+    symbol: string;
+    maxSupply: number;
 }
 
 export default function CreateCollectibleView() {
@@ -150,15 +30,34 @@ export default function CreateCollectibleView() {
     const [premintEnabled, setPremintEnabled] = useState(true);
     const [blockchainType, setBlockchainType] = useState<BlockchainType>("Ethereum");
     const [stage, setStage] = useState(1);
+    const [collections, setCollections] = useState<any[]>([]);
+    const [createCollection, setCreateCollection] = useState(false);
+    const [newCollection, setNewCollection] = useState<ICreateCollection>({
+        name: "",
+        symbol: "",
+        maxSupply: 1,
+    });
+    const [enablePremint, setEnablePremint] = useState(false);
 
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams()!;
 
+    function handleAddCollection() {
+        setCollections((collections) => [
+            ...collections,
+            {
+                name: "",
+                symbol: "",
+            }
+        ]);
+        setCreateCollection(true);
+    }
+
     return (
         <div className="h-full grid grid-cols-1 grid-rows-8">
             <div className="row-span-1">
-                <p className="text-2xl h-fit"> Collectibles </p>
+                <p className="text-2xl h-fit"> Collections </p>
                 <div className="flex h-fit p-3 items-center justify-between text-sm my-6 font-[500] flex-wrap">
                     <p className="cursor-pointer" onClick={() => {
                         const params = new URLSearchParams();
@@ -179,7 +78,7 @@ export default function CreateCollectibleView() {
                     }}> Collectible(s) </p>
                 </div>
             </div>
-            <div className="bg-slate-200 row-span-6 flex justify-center items-center overflow-y-auto">
+            <div className="bg-[#ECEFF4] row-span-6 flex justify-center items-center overflow-y-auto">
                 {
                     stage === 1 ? (
                         <div className="">
@@ -204,19 +103,12 @@ export default function CreateCollectibleView() {
                             </select>
                         </div>
                     ) : stage === 3 ? (
-                        <div className="">
-                            <p className="text-md text-center mb-4"> Collection </p>
-                            <div className="flex items-baseline jusfify-between gap-4">
-                                <input
-                                    type="text"
-                                    className="block apperance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
-                                />
-                                <PlusSquareOutlined className="text-2xl hover:opacity-70" />
-                            </div>
+                        <div className="box-border">
+                            <CreateCollection />
                         </div>
                     ) : stage === 4 ? (
                         <div className="h-full">
-                            <CreateERC721CollectibleView premintEnabled={premintEnabled} />
+                            <CreateERC721Collectible />
                         </div>
                     ) : null
                 }
