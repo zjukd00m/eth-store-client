@@ -1,120 +1,161 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form"
-import * as yup from "yup";
+import { ChangeEvent, useContext, useRef, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
+import { PlusSquareOutlined } from "@ant-design/icons";
+import { CreateERC721Collectible } from "@/components/collectibles/create/ERC721Collectible";
+import CreateCollection from "@/components/collections/create/Collections";
+import { CollectionContext } from "@/context/CollectionContext/CollectionContext";
+import { CollectiblesContext } from "@/context/CollectibleContext/CollectibleContext";
+import { SET_SMC_CHAIN, SET_SMC_DATA, SET_SMC_TYPE } from "@/actions/collections.actions";
+import { SmartContractChain } from "@/types/smart-contrat.types";
 
-type CollectibleType = "ERC721" | "ERC1155";
+type CollectionType = "ERC721" | "ERC1155";
 
-interface CreateCollectibleData {
+interface CreateCollectionData {
     name: string;
     symbol: string;
     price: BigInt;
-    type: CollectibleType;
+    type: CollectionType;
 }
 
-export function CreateERC721CollectibleView({
-    premintEnabled
-}: {
-    premintEnabled: boolean;
-}) {
+
+interface ICreateCollection {
+    name: string;
+    symbol: string;
+    maxSupply: number;
+}
+
+export default function CreateCollectibleView() {
+    const [premintEnabled, setPremintEnabled] = useState(true);
+    const [stage, setStage] = useState(1);
+    const [collections, setCollections] = useState<any[]>([]);
+    const [createCollection, setCreateCollection] = useState(false);
+    const [newCollection, setNewCollection] = useState<ICreateCollection>({
+        name: "",
+        symbol: "",
+        maxSupply: 1,
+    });
+
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams()!;
+
+    const { state, dispatch } = useContext(CollectionContext);
+    const { state: collectiblesState, dispatch: collectiblesDispatch } = useContext(CollectiblesContext);
+
+    console.log(state)
+
+    function handleAddCollection() {
+        setCollections((collections) => [
+            ...collections,
+            {
+                name: "",
+                symbol: "",
+            }
+        ]);
+        setCreateCollection(true);
+    }
 
     return (
-        <div className="flex gap-5">
-            <div className="">
-                <input 
-                    type="file"
-                    className="bg-red-100 h-[30rem] w-[30rem]"
-                />
+        <div className="h-full grid grid-cols-1 grid-rows-8">
+            <div className="row-span-1">
+                <p className="text-2xl h-fit"> Collections </p>
+                <div className="flex h-fit p-3 items-center justify-between text-sm my-6 font-[500] flex-wrap">
+                    <p className="cursor-pointer" onClick={() => {
+                        const params = new URLSearchParams();
+                        params.set("contract-type", state?.contractType);
+                        router.push(pathname + "?" + params.toString());
+                    }}> Contract Type </p>
+                    <p className="cursor-pointer" onClick={() => {
+                    const params = new URLSearchParams();
+                    params.set("blockchain", state?.blockchain);
+                    router.push(pathname + "?" + searchParams.toString() + "&" + params.toString());
+                    }}> Blockchain </p>
+                    <p className="cursor-pointer" onClick={() => {
+                        const params = new URLSearchParams();
+                        params.set("collection", "true");
+                    }}> Collection </p>
+                    <p className="cursor-pointer" onClick={() => {
+                        const params = new URLSearchParams();
+                    }}> Collectible(s) </p>
+                </div>
             </div>
-            <div className="w-full mx-[60px]">
-                <div className="flex justify-between">
-                    <div className="mb-6">
-                        <input
-                            className=""
-                            type="checkbox"
-                        />
-                        <label className="text-md"> Single collectible </label>
-                    </div>
-                </div>
-                <div className="flex items-center justify-between">
-                    <div className="">
-                        <p className="text-md mb-2"> Name </p>
-                        <input
-                            className="text-sm p-1 rounded-md px-3"
-                        />
-                    </div>
-                    <div className="">
-                        <p className="text-md mb-2"> Symbol </p>
-                        <input
-                            className="text-sm p-1 rounded-md px-3"
-                        />
-                    </div>
-                </div>
-                <div className="mt-6">
-                    <p className="text-md mb-2"> Public mint price (Wei) </p>
-                    <input
-                        type="number"
-                        className="text-sm p-1 rounded-md px-3"
-                        min={0}
-                    />
-                </div>
-                <div className="mt-6">
-                    <p className="text-md mb-2"> Public mint date </p>
-                    <input
-                        type="date"
-                        className="text-sm p-1 rounded-md px-3"
-                    />
-                </div>
+            <div className="bg-[#ECEFF4] row-span-6 flex justify-center items-center overflow-y-auto">
                 {
-                    premintEnabled ? (
+                    stage === 1 ? (
                         <div className="">
-                           <div className="">
+                            <p className="text-md text-center mb-4"> Contract Type </p>
+                            <select 
+                                onChange={(e) => {
+                                    const contractType = e.target.value as CollectionType;
+                                    dispatch({
+                                        type: SET_SMC_TYPE,
+                                        payload: {
+                                            contractType,
+                                        }
+                                    })
+                                }}
+                                className="block apperance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
+                                value={state?.contractType}
+                            >
+                                <option className="text-gray-600 hover:bg-gray-100 hover:text-black p-1"> ERC721 </option>
+                                <option className="text-gray-600 hover:bg-gray-100 hover:text-black p-1"> ERC1155 </option>
+                            </select>
+                        </div>
+                    ) : stage === 2 ? (
+                        <div className="">
+                            <p className="text-md text-center mb-4"> Blockchain </p>
+                            <select
+                                onChange={(e) => {
+                                    const blockchain = e.target.value as SmartContractChain;
+                                    dispatch({
+                                        type: SET_SMC_CHAIN,
+                                        payload: {
+                                            blockchain,
+                                        }
+                                    })
 
-                            </div>
+                                }}
+                                className="block apperance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
+                                value={state?.blockchain}
+                            >
+                                <option className="text-gray-600 hover:bg-gray-100 hover:text-black p-1"> ETHEREUM </option>
+                                <option className="text-gray-600 hover:bg-gray-100 hover:text-black p-1"> POLYGON </option>
+                            </select>
+                        </div>
+                    ) : stage === 3 ? (
+                        <div className="box-border">
+                            <CreateCollection />
+                        </div>
+                    ) : stage === 4 ? (
+                        <div className="h-full">
+                            <CreateERC721Collectible />
                         </div>
                     ) : null
                 }
             </div>
-        </div>
-    )
-}
-
-export default function CreateCollectibleView() {
-    const [isCollection, setIsCollection] = useState(false);
-    const [collectibleType, setCollectibleType] = useState<CollectibleType>("ERC721")
-    const [collectibleName, setCollectibleName] = useState("");
-    const [collectibleSymbol, setCollectibleSymbol] = useState("");
-    const [premintEnabled, setPremintEnabled] = useState(false);
-
-    return (
-        <div className="">
-            <p className=""> Create a collectible </p>
-            <div className="">
-                <select className="" onChange={(e) => setCollectibleType(e.target.value as CollectibleType)}>
-                    <option className=""> ERC721 </option>
-                    <option className=""> ERC1155 </option>
-                </select>
+            <div className="flex row-span-1 h-fit justify-between items-center">
+                <button 
+                    onClick={() => {
+                        if (stage > 1) {
+                            setStage((stage) => stage - 1);
+                        }
+                    }}
+                    className="bg-gray-800 hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 text-white font-semibold py-2 px-6 rounded shadow-md transition duration-300 ease-in-out"
+                >
+                    Prev
+                </button>
+                <button 
+                    onClick={() => {
+                        if (stage < 5) {
+                            setStage((stage) => stage + 1);
+                        }
+                    }}
+                    className="bg-gray-800 hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 text-white font-semibold py-2 px-6 rounded shadow-md transition duration-300 ease-in-out"
+                >
+                    Next
+                </button>
             </div>
-
-            <div className="mb-6">
-                <input
-                    className=""
-                    type="checkbox"
-                    onChange={(e) => setPremintEnabled(e.target.checked)}
-                />
-                <label className="text-md"> Enable pre-mint </label>
-            </div>
-
-            <div className="">
-                <p className=""> de </p>
-            </div>
-
-            {
-                collectibleType === "ERC721" ? <CreateERC721CollectibleView premintEnabled={premintEnabled} /> : null
-            }
-
-            <button className="bg-slate-500 text-white text-sm font-bold px-4 py-2 rounded-md">
-                Deploy
-            </button>
         </div>
     )
 }
