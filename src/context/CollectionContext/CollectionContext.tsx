@@ -1,10 +1,10 @@
 import React, { createContext, useReducer } from "react";
 import collectionsReducer from "@/reducers/collections/collections.reducer";
-import { CollectibleERC721State } from "@/types/collections.types";
+import { CollectibleERCState } from "@/types/collections.types";
 import { initialCollectionContextState } from "./collection.contants";
 
 interface ICollectionContext {
-    state: CollectibleERC721State;
+    state: CollectibleERCState;
     dispatch: React.Dispatch<any>;
 }
 
