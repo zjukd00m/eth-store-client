@@ -1,18 +1,21 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useContext, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { PlusSquareOutlined } from "@ant-design/icons";
 import { CreateERC721Collectible } from "@/components/collectibles/create/ERC721Collectible";
 import CreateCollection from "@/components/collections/create/Collections";
+import { CollectionContext } from "@/context/CollectionContext/CollectionContext";
+import { CollectiblesContext } from "@/context/CollectibleContext/CollectibleContext";
+import { SET_SMC_CHAIN, SET_SMC_DATA, SET_SMC_TYPE } from "@/actions/collections.actions";
+import { SmartContractChain } from "@/types/smart-contrat.types";
 
-type CollectibleType = "ERC721" | "ERC1155";
-type BlockchainType = "Ethereum" | "Polygon";
+type CollectionType = "ERC721" | "ERC1155";
 
-interface CreateCollectibleData {
+interface CreateCollectionData {
     name: string;
     symbol: string;
     price: BigInt;
-    type: CollectibleType;
+    type: CollectionType;
 }
 
 
@@ -23,12 +26,7 @@ interface ICreateCollection {
 }
 
 export default function CreateCollectibleView() {
-    const [isCollection, setIsCollection] = useState(false);
-    const [collectibleType, setCollectibleType] = useState<CollectibleType>("ERC721")
-    const [collectibleName, setCollectibleName] = useState("");
-    const [collectibleSymbol, setCollectibleSymbol] = useState("");
     const [premintEnabled, setPremintEnabled] = useState(true);
-    const [blockchainType, setBlockchainType] = useState<BlockchainType>("Ethereum");
     const [stage, setStage] = useState(1);
     const [collections, setCollections] = useState<any[]>([]);
     const [createCollection, setCreateCollection] = useState(false);
@@ -37,11 +35,15 @@ export default function CreateCollectibleView() {
         symbol: "",
         maxSupply: 1,
     });
-    const [enablePremint, setEnablePremint] = useState(false);
 
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams()!;
+
+    const { state, dispatch } = useContext(CollectionContext);
+    const { state: collectiblesState, dispatch: collectiblesDispatch } = useContext(CollectiblesContext);
+
+    console.log(state)
 
     function handleAddCollection() {
         setCollections((collections) => [
@@ -61,12 +63,12 @@ export default function CreateCollectibleView() {
                 <div className="flex h-fit p-3 items-center justify-between text-sm my-6 font-[500] flex-wrap">
                     <p className="cursor-pointer" onClick={() => {
                         const params = new URLSearchParams();
-                        params.set("contract-type", collectibleType);
+                        params.set("contract-type", state?.contractType);
                         router.push(pathname + "?" + params.toString());
                     }}> Contract Type </p>
                     <p className="cursor-pointer" onClick={() => {
                     const params = new URLSearchParams();
-                    params.set("blockchain", "polygon");
+                    params.set("blockchain", state?.blockchain);
                     router.push(pathname + "?" + searchParams.toString() + "&" + params.toString());
                     }}> Blockchain </p>
                     <p className="cursor-pointer" onClick={() => {
@@ -84,8 +86,17 @@ export default function CreateCollectibleView() {
                         <div className="">
                             <p className="text-md text-center mb-4"> Contract Type </p>
                             <select 
-                                onChange={(e) => setCollectibleType(e.target.value as CollectibleType)}
+                                onChange={(e) => {
+                                    const contractType = e.target.value as CollectionType;
+                                    dispatch({
+                                        type: SET_SMC_TYPE,
+                                        payload: {
+                                            contractType,
+                                        }
+                                    })
+                                }}
                                 className="block apperance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
+                                value={state?.contractType}
                             >
                                 <option className="text-gray-600 hover:bg-gray-100 hover:text-black p-1"> ERC721 </option>
                                 <option className="text-gray-600 hover:bg-gray-100 hover:text-black p-1"> ERC1155 </option>
@@ -95,11 +106,21 @@ export default function CreateCollectibleView() {
                         <div className="">
                             <p className="text-md text-center mb-4"> Blockchain </p>
                             <select
-                                onChange={(e) => setBlockchainType(e.target.value as BlockchainType)}
+                                onChange={(e) => {
+                                    const blockchain = e.target.value as SmartContractChain;
+                                    dispatch({
+                                        type: SET_SMC_CHAIN,
+                                        payload: {
+                                            blockchain,
+                                        }
+                                    })
+
+                                }}
                                 className="block apperance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
+                                value={state?.blockchain}
                             >
-                                <option className="text-gray-600 hover:bg-gray-100 hover:text-black p-1"> Ethereum </option>
-                                <option className="text-gray-600 hover:bg-gray-100 hover:text-black p-1"> Polygon </option>
+                                <option className="text-gray-600 hover:bg-gray-100 hover:text-black p-1"> ETHEREUM </option>
+                                <option className="text-gray-600 hover:bg-gray-100 hover:text-black p-1"> POLYGON </option>
                             </select>
                         </div>
                     ) : stage === 3 ? (
