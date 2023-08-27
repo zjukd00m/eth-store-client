@@ -1,36 +1,96 @@
-import { Tulpen_One } from "next/font/google";
-import React, { createContext, useReducer } from "react";
+import { Dispatch, ReactNode, createContext, useContext, useEffect, useReducer, useState } from "react";
+import { initialAuthState } from "./auth.constants";
+import authReducer from "@/reducers/auth/auth.reducer";
+import { AuthState } from "@/types/auth.types";
+import { RESET_STATE, SET_USER } from "@/actions/auth.actions";
 
-const AuthContext = createContext({});
+const AuthContext = createContext<{
+  state: AuthState;
+  dispatch: Dispatch<any>,
+  locked: boolean;
+  login: () => Promise<void>;
+}>({
+  state: initialAuthState,
+  dispatch: () => null,
+  locked: false,
+  login: () => Promise.resolve(),
+});
 
-const authReducer = (
-  state: React.ReducerState,
-  action: React.ReducerAction
-) => {
-  const { type, payload } = action;
+export default function AuthContextProvider({ children }: {
+  children: ReactNode;
+}) {
+  const [state, dispatch] = useReducer(authReducer, initialAuthState);
+  const [locked, setLocked] = useState(false);
 
-  switch (type) {
-    case type === "SET_USER": {
-      const { user } = payload;
-      return {
-        ...state,
-        user,
-      };
+  // Lock the context functionality when metamask is not installed
+  // useEffect(() => {
+  //   if (typeof window.ethereum === "undefined") setLocked(true);
+  //   else setLocked(false); 
+  // }, []);
+
+  // Authenticate the user on active connection from the wallet to the app
+  useEffect(() => {
+    if (locked) return;
+    (async () => {
+        const account = await window.ethereum.request({  method: "eth_accounts" });
+
+        if (account?.length && !state.isAuthenticated)
+          dispatch({
+            type: SET_USER,
+            payload: {
+              wallet: account[0]
+            }
+          });
+    })();
+  }, [locked]);
+
+
+  // Listen for changes in the account (on change), when there's no account
+  // then reset the authentication state
+  useEffect(() => {
+      if (locked) return;
+      window.ethereum.on("accountsChanged", (accounts: string[]) => {
+          if (!accounts?.length)
+            dispatch({
+              type: RESET_STATE,
+              payload: {
+                wallet: accounts[0],
+              }
+            });
+      });
+  }, [locked]);
+
+    async function login() {
+      console.log("----")
+      console.log("heree")
+      console.log({ locked })
+      if (locked) return;
+      try {
+        // Request the wallet sign in with metamask
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+
+        dispatch({
+          type: SET_USER,
+          payload: {
+            wallet: accounts[0],
+          },
+        });
+      } catch (error: any) {
+        if (error.code === 4001) {
+            console.log("Connect to metamask");
+        } else {
+            console.error(error.message);
+        }
+      }
     }
-    case type === "RESET_USER": {
-      return {
-        ...state,
-        user: null,
-      };
-    }
-    default: {
-      return state;
-    }
+
+  return <AuthContext.Provider value={{state, dispatch, locked, login}}>{children}</AuthContext.Provider>;
+}
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("==> Install Metamask First!");
   }
-};
-
-export default function AuthContextProvider({ children }) {
-  const [dispatch, state] = useReducer(authReducer, initialState);
-
-  return <AuthContext.Provider value={{}}>{children}</AuthContext.Provider>;
+  return context;
 }

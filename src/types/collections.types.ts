@@ -27,4 +27,7 @@ export interface CollectibleERCState {
   contractType: SmartContractType;
   blockchain: SmartContractChain;
   metadata?: Record<string, any> | null;
+  errors?: Record<string, string>;
+  isDeployed: boolean;
+  isStored: boolean;
 }

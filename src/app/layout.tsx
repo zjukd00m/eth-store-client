@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Dropdown from "@/components/shared/Dropdown";
 import { GlobalLayoutProps } from "./interfaces";
-import useAuth from "@/hooks/AuthHook";
 import { FileProtectOutlined, FolderOutlined, HomeOutlined, PoweroffOutlined, UserOutlined } from "@ant-design/icons";
+import { useAuth } from "@/context/AuthContext/AuthContext";
 
 const sidebarItems = [
   {
@@ -21,7 +21,7 @@ const sidebarItems = [
   },
   {
     name: "Collectibles",
-    url: "/collectibles",
+    url: "/collections",
     options: [
       { name: "all", url: "" },
       { name: "deployed", url: "/deployed" },
@@ -42,7 +42,7 @@ const sidebarItems = [
 
 export default function GlobalLayout(props: GlobalLayoutProps) {
   const { children } = props;
-  const { isAuthenticated } = useAuth();
+  const { state: { isAuthenticated } } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (

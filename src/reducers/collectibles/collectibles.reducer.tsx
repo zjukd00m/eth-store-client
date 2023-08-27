@@ -1,18 +1,17 @@
-import { SET_COLLECTIBLE, UPDATE_COLLECTIBLE, RESET_COLLECTIBLE } from "@/actions/collectible.actions";
+import { SET_COLLECTIBLE_METADATA, RESET_COLLECTIBLE, SET_COLLECTIBLE_DATA } from "@/actions/collectible.actions";
 import { initialCollectiblesContextState } from "@/context/CollectibleContext/collectible.constants";
 import { CollectibleState } from "@/types/collectibles.types";
 
-export default function collectiblesReducer(state: CollectibleState, action: any) {
+export default function collectiblesReducer(state: CollectibleState, action: any): CollectibleState {
     switch (action.type) {
-        case SET_COLLECTIBLE:
-            return {
-                ...state,
-                data: {
-                    ...state.data,
-                    ...action.payload,
-                }
-            };
-        case UPDATE_COLLECTIBLE:
+        case SET_COLLECTIBLE_DATA: {
+            const { payload } = action;
+            // if (payload.traitType === "") {}
+            // else if (...) {...}
+            //
+            return state;
+        }
+        case SET_COLLECTIBLE_METADATA:
             return {
                 ...state,
                 data: {
@@ -21,9 +20,7 @@ export default function collectiblesReducer(state: CollectibleState, action: any
                 }
             };
         case RESET_COLLECTIBLE:
-            return {
-                data: initialCollectiblesContextState
-            }
+            return initialCollectiblesContextState
         default:
             return state;
     }

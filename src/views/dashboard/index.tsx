@@ -1,13 +1,15 @@
-import useAuth from "@/hooks/AuthHook";
-
+import { useAuth } from "@/context/AuthContext/AuthContext";
 
 export default function Dashboard() {
-  const { isAuthenticated, login } = useAuth();
+  const { state: { isAuthenticated }, login, dispatch, locked } = useAuth();
 
   async function handleConnectWallet() {
     if (isAuthenticated) return;
-
-    await login();
+    try {
+      await login();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -28,9 +30,8 @@ export default function Dashboard() {
           fontWeight: "700",
         }}
       >
-        {" "}
         Buy content directly from the creators with no intermediaries and low
-        fees{" "}
+        fees
       </p>
       <p
         style={{

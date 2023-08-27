@@ -18,9 +18,8 @@ export default function CollectiblesContextProvider({
 }: {
     children: React.ReactNode;
 }) {
-    const [state, dispatch] = useReducer(collectiblesReducer, {
-        data: initialCollectiblesContextState,
-    });
+    const [state, dispatch] = useReducer(collectiblesReducer, initialCollectiblesContextState);
+        
 
     return (
         <CollectiblesContext.Provider value={{ state, dispatch }}>
