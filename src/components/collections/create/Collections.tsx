@@ -36,9 +36,9 @@ export default function CreateCollection() {
         
     return (
         <div className="">
-            <p className="text-md text-center my-3"> Smart Contract Details </p>
-            <div className="flex items-center justify-start gap-6">
-                <p className="text-sm"> Enable Pre-mint</p>
+            <p className="text-md text-center my-3 font-medium"> Smart Contract Details </p>
+            <div className="flex justify-items-center justify-left space-x-4">
+                <p className="text-sm font-medium text-[var(--text-cool-color)]"> Enable Pre-mint</p>
                 <input
                     type="checkbox"
                     className=""
@@ -47,72 +47,155 @@ export default function CreateCollection() {
             </div>
             <form className="grid grid-cols-2 gap-12">
                 <div className="col-span-1">
-                    <div className="mt-3">
-                        <p className="text-sm mb-1"> Name </p>
+                    {/* --- */}
+                    <div className="mt-4">
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
                         <input
                             id="name"
-                            className="text-sm block apperance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-1 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
+                            type="text"
+                            className="
+                                mt-1 
+                                block 
+                                w-full 
+                                sm:text-sm 
+                                border-gray-300 
+                                border-[1px] 
+                                rounded-md
+                                px-2
+                                py-2
+                                outline-none
+                            "
                             onChange={handleCollectionInputDataChange}
                             value={state?.data?.name}
+                            placeholder="Enter Name"
                         />
                     </div>
+                    {/* --- */}
                     <div className="mt-3">
-                        <p className="text-sm mb-1"> Symbol </p>
+                        <label htmlFor="symbol" className="block text-sm font-medium text-gray-700">Symbol</label>
                         <input
                             id="symbol"
-                            className="text-sm block apperance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-1 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
+                            className="
+                                mt-1 
+                                block 
+                                w-full 
+                                sm:text-sm 
+                                border-gray-300 
+                                border-[1px] 
+                                rounded-md
+                                px-2
+                                py-2
+                                outline-none
+                            "
                             onChange={handleCollectionInputDataChange}
                             value={state?.data?.symbol}
+                            placeholder="Enter Symbol"
                         />
                     </div>
                     <div className="mt-3">
-                        <p className="text-sm mb-1"> Base Uri </p>
+                        <label htmlFor="baseURI" className="block text-sm font-medium text-gray-700">Base Uri</label>
                         <input
                             id="baseURI"
-                            className="text-sm block apperance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-1 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
+                            className="
+                                mt-1 
+                                block 
+                                w-full 
+                                sm:text-sm 
+                                border-gray-300 
+                                border-[1px] 
+                                rounded-md
+                                px-2
+                                py-2
+                                outline-none
+                            "
                             onChange={handleCollectionInputDataChange}
                             value={state?.data?.baseURI}
+                            placeholder="Enter Base URI"
                         />
                     </div>
                     <div className="mt-3">
-                        <p className="text-sm mb-1"> Max Supply </p>
+                        <label htmlFor="maxSupply" className="block text-sm font-medium text-gray-700">Max Supply</label>
                         <input
                             id="maxSupply"
                             type="number"
                             min={1}
-                            className="text-sm block apperance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-1 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
+                            className="
+                                mt-1 
+                                block 
+                                w-full 
+                                sm:text-sm 
+                                border-gray-300 
+                                border-[1px] 
+                                rounded-md
+                                px-2
+                                py-2
+                                outline-none
+                            "
                             onChange={handleCollectionInputDataChange}
                             value={state?.data?.maxSupply}
                         />
                     </div>
                     <div className="mt-3">
-                        <p className="text-sm mb-1"> Mint Price <span className="text-[11px]"> (WEI) </span> </p>
+                        <label htmlFor="publicMintPrice" className="block text-sm font-medium text-gray-700"> Mint Price <span className="text-[11px]"> (WEI) </span> </label>
                         <input
                             id="publicMintPrice"
                             type="number"
                             min={1}
-                            className="text-sm block apperance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-1 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
+                            className="
+                                mt-1 
+                                block 
+                                w-full 
+                                sm:text-sm 
+                                border-gray-300 
+                                border-[1px] 
+                                rounded-md
+                                px-2
+                                py-2
+                                outline-none
+                            "
                             onChange={handleCollectionInputDataChange}
                             value={state?.data?.publicMintPrice}
                         />
                     </div>
                     <div className="mt-3">
-                        <p className="text-sm mb-2"> Mint date </p>
+                        <label htmlFor="publicMintStartDate" className="block text-sm font-medium text-gray-700"> Mint Start Date </label>
                         <input
                             id="publicMintStartDate"
                             type="date"
-                            className="text-sm w-full block apperance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-1 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
+                            className="
+                                mt-1 
+                                block 
+                                w-full 
+                                sm:text-sm 
+                                border-gray-300 
+                                border-[1px] 
+                                rounded-md
+                                px-2
+                                py-2
+                                outline-none
+                            "
                             onChange={handleCollectionInputDataChange}
                             value={state?.data?.publicMintStartDate}
                         />
                     </div>
                     <div className="mt-3">
-                        <p className="text-sm mb-2"> Max collectibles per wallet </p>
+                        <label htmlFor="maxCollectiblesPerWallet" className="block text-sm font-medium text-gray-700"> Max collectibles per wallet </label>
                         <input
                             id="maxCollectiblesPerWallet"
                             type="number"
                             min={0}
-                            className="text-sm w-full block apperance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-1 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
+                            className="
+                                mt-1 
+                                block 
+                                w-full 
+                                sm:text-sm 
+                                border-gray-300 
+                                border-[1px] 
+                                rounded-md
+                                px-2
+                                py-2
+                                outline-none
+                            "
                             onChange={handleCollectionInputDataChange}
                             value={state?.data?.maxCollectiblesPerWallet}
                         />
@@ -124,54 +207,109 @@ export default function CreateCollection() {
                             enablePremint ? (
                                 <div className="">
                                     <div className="mt-3">
-                                        <p className="text-sm mb-2"> Start date </p>
+                                        <label htmlFor="preMintStartDate" className="block text-sm font-medium text-gray-700"> Pre-mint Start Date </label>
                                         <input 
                                             id="preMintStartDate"
                                             type="date"
-                                            className="text-sm w-full block apperance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-1 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
+                                            className="
+                                                mt-1 
+                                                block 
+                                                w-full 
+                                                sm:text-sm 
+                                                border-gray-300 
+                                                border-[1px] 
+                                                rounded-md
+                                                px-2
+                                                py-2
+                                                outline-none
+                                            "
                                             onChange={handleCollectionInputDataChange}
                                             value={state?.data?.preMintStartDate}
                                         />
                                     </div>
                                     <div className="mt-3">
-                                        <p className="text-sm mb-2"> End date </p>
+                                        <label htmlFor="preMintEndDate" className="block text-sm font-medium text-gray-700"> Pre-mint End Date </label>
                                         <input
                                             id="preMintEndDate"
                                             type="date"
-                                            className="text-sm w-full block apperance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-1 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
+                                            className="
+                                                mt-1 
+                                                block 
+                                                w-full 
+                                                sm:text-sm 
+                                                border-gray-300 
+                                                border-[1px] 
+                                                rounded-md
+                                                px-2
+                                                py-2
+                                                outline-none
+                                            "
                                             onChange={handleCollectionInputDataChange}
                                             value={state?.data?.preMintEndDate}
                                         />
                                     </div>
                                     <div className="mt-3">
-                                        <p className="text-sm mb-2"> Pre-Mint price <span className="text-[11px]"> (WEI) </span> </p>
+                                        <label htmlFor="preMintPrice" className="block text-sm font-medium text-gray-700"> Pre-Mint Price <span className="text-[11px]"> (WEI) </span> </label>
                                         <input
                                             id="preMintPrice"
                                             type="number"
                                             min={1}
-                                            className="text-sm w-full block apperance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-1 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
+                                            className="
+                                                mt-1 
+                                                block 
+                                                w-full 
+                                                sm:text-sm 
+                                                border-gray-300 
+                                                border-[1px] 
+                                                rounded-md
+                                                px-2
+                                                py-2
+                                                outline-none
+                                            "
                                             onChange={handleCollectionInputDataChange}
                                             value={state?.data?.preMintPrice}
                                         />
                                     </div>
                                     <div className="mt-3">
-                                        <p className="text-sm mb-2"> Pre-mint collectibles </p>
+                                        <label htmlFor="maxPreMintCollectibles" className="block text-sm font-medium text-gray-700"> Pre-Mint Collectibles </label>
                                         <input
                                             id="maxPreMintCollectibles"
                                             type="number"
                                             min={1}
-                                            className="text-sm w-full block apperance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-1 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
                                             onChange={handleCollectionInputDataChange}
+                                            className="
+                                                mt-1 
+                                                block 
+                                                w-full 
+                                                sm:text-sm 
+                                                border-gray-300 
+                                                border-[1px] 
+                                                rounded-md
+                                                px-2
+                                                py-2
+                                                outline-none
+                                            "
                                             value={state?.data?.maxPreMintCollectibles}
                                         />
                                     </div>
                                     <div className="mt-3">
-                                        <p className="text-sm mb-2"> Max pre-mint collectibles per wallet </p>
+                                        <label htmlFor="maxPreMintCollectiblesPerWallet" className="block text-sm font-medium text-gray-700"> Max pre-mint collectibles per wallet </label>
                                         <input
                                             id="maxPreMintCollectiblesPerWallet"
                                             type="number"
                                             min={0}
-                                            className="text-sm w-full block apperance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-1 pr-8 rounded leading-tight focus:outline-none focus:bg-whote focus:border-gray-500" 
+                                            className="
+                                                mt-1 
+                                                block 
+                                                w-full 
+                                                sm:text-sm 
+                                                border-gray-300 
+                                                border-[1px] 
+                                                rounded-md
+                                                px-2
+                                                py-2
+                                                outline-none
+                                            "
                                             onChange={handleCollectionInputDataChange}
                                             value={state?.data?.maxPreMintCollectiblesPerWallet}
                                         />

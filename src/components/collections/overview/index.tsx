@@ -2,7 +2,7 @@ import { RESET_SMC_STATE } from "@/actions/collections.actions";
 import { CollectionContext } from "@/context/CollectionContext/CollectionContext";
 import { getWeb3Client } from "@/services/ethereum/ethereum";
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import React, { useContext } from "react";
 
 // ? > When no more items can be added to the collection:
 // ? >  The user can edit the maxSupply argument
@@ -16,7 +16,8 @@ export default function CollectionOverview() {
     const { errors } = collectionState;
 
 
-    function handleCancelCreateCollection() {
+    function handleCancelCreateCollection(e: any) {
+        e.preventDefault();
         dispatch({ type: RESET_SMC_STATE });
         router.push("/collections"); 
     }
@@ -49,16 +50,38 @@ export default function CollectionOverview() {
     }
 
     return (
-        <div className="w-full h-[100%] bg-green-100">
+        <div className="w-full h-full flex flex-col justify-start">
             <p className="text-2xl"> { collectionState?.data.name } </p>
             <p className="text-sm my-3"> Up to this point you can perform any of the following actions </p>
-            <div className="mt-5">
+            <div className="mt-5 flex flex-col h-full justify-center gap-5">
                 {/* ==> COLLECTION OPTIONS <== */}
-                <div className="grid grid-cols-2 grid-rows-auto gap-5 bg-red-200">
-                        <div className="bg-white shadow-xs rounded-md p-6 h-[100%] flex flex-col items-start justify-between">
+                <div className="h-full flex items-start w-full gap-5">
+                    <div className="
+                        bg-white
+                        shadow-xs
+                        rounded-md
+                        p-6 
+                        h-60 
+                        w-full
+                        flex
+                        flex-col
+                        items-start
+                        justify-between
+                        hover:opacity-90
+                        hover:bg-[#fafafa]
+                        ease-in 
+                        duration-300
+                        bg-[url('/assets/absurd_design_Chapter_1_08.png')]
+                        bg-right
+                        bg-origin-padding
+                        bg-clip-padding
+                        bg-contain
+                        bg-no-repeat
+                        "
+                    >
                         <div className="mb-4">
-                            <h2 className="my-1 text-md font-semibold"> Add collectibles to your collection </h2>
-                            <p className="text-sm text-gray-600"> Be it manually or in a near automated way by minting them </p>
+                            <h2 className="my-1 text-md font-semibold w-fit"> Add collectibles to your collection </h2>
+                            <p className="text-sm text-[var(--text-cool-color)] w-[90%]"> Be it manually or in a near automated way by minting them </p>
                             <div className="my-2">
                                 <p className="text-sm"> Items: <span className="ml-5 text-sm"> 0/1000 </span> </p>
                             </div>
@@ -77,10 +100,32 @@ export default function CollectionOverview() {
                     {
                         (!collectionState?.isStored && !collectionState?.isDeployed) ||
                         (collectionState?.isStored && !collectionState?.isDeployed) ? (
-                        <div className="bg-white shadow-xs rounded-md p-6 h-[15rem] flex flex-col items-start justify-between">
+                        <div className="
+                            bg-white 
+                            shadow-xs 
+                            rounded-md
+                            p-6
+                            h-60
+                            w-full
+                            flex
+                            flex-col
+                            items-start
+                            justify-between
+                            hover:opacity-90
+                            hover:bg-[#fafafa]
+                            ease-in
+                            duration-300
+                            bg-[url('/assets/absurd_design_Chapter_1_34.png')] 
+                            bg-right
+                            bg-origin-padding
+                            bg-clip-padding
+                            bg-contain
+                            bg-no-repeat
+                            "
+                        >
                             <div className="mb-4">
-                                <h2 className="text-md font-semibold">Add collectibles later</h2>
-                                <p className="text-sm text-gray-600">You can come any time you want, add collectibles and edit your contract data before deploying it to a blockchain.</p>
+                                <h2 className="my-1 text-md font-semibold w-fit">Add collectibles later</h2>
+                                <p className="text-sm text-[var(--text-cool-color)] w-[60%]">You can come any time you want, add collectibles and edit your contract data before deploying it to a blockchain</p>
                             </div>
                             <div>
                                 <button 
@@ -94,20 +139,19 @@ export default function CollectionOverview() {
                         ) : null
                     }
                 </div>
-                <button
+                <a
+                    href="#"
                     className={`
-                        text-sm 
-                        bg-red-500
-                        rounded-md
-                        px-3
-                        py-[0.5rem]
-                        text-white
+                        text-xs
+                        text-gray-600
                         font-bold
+                        text-center
+                        underline
                     `}
                     onClick={handleCancelCreateCollection}
                 >
-                    Cancel
-                </button>
+                    Or cancel and discard changes
+                </a>
             </div>
         </div>
     )

@@ -65,14 +65,20 @@ export default function CreateCollectibleView() {
     }
 
     function handleNextButtonAction() {
-        if (stage >= 4) return;
+        if (stage > 4) return;
+        else if (stage === 3) {
+            if (!confirm("Is your collection data ok ?")) return;
+        }
+        else if (stage === 4) {
+            if(!confirm("Do you want to deploy your collection ?")) return;
+        }
         setStage((stage) => stage + 1);
     }
 
     return (
         <div className="h-full flex flex-row w-full">
-            <div className="flex flex-col justify-between bg-[#ECEFF4] bg-yellow-100 w-full">
-                <div className="flex justify-center items-center overflow-y-auto bg-green-100 h-full">
+            <div className="flex flex-col justify-between bg-[#ECEFF4] w-full">
+                <div className="flex justify-center items-center overflow-y-auto h-full">
                     {
                         stage === 1 ? (
                             <div className="">
@@ -121,12 +127,13 @@ export default function CreateCollectibleView() {
                                 <CollectionOverview />
                         ) : (
                             <div>
-                                <p> Hello from the w0rl </p>
+                                <p> Your collection has been deployed </p>
+                                <img src={"/assets/absurd_design_Chapter_1_08.png"} />
                             </div>
                         )
                     }
                 </div>
-                <div className="flex justify-between items-center py-3 bg-blue-100">
+                <div className="flex justify-between items-center py-3">
                     <button 
                         onClick={handlePrevButtonAction}
                         className="bg-gray-800 hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 text-white font-semibold py-2 px-6 rounded shadow-md transition duration-300 ease-in-out"
@@ -137,7 +144,9 @@ export default function CreateCollectibleView() {
                         onClick={handleNextButtonAction}
                         className="bg-gray-800 hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 text-white font-semibold py-2 px-6 rounded shadow-md transition duration-300 ease-in-out"
                     >
-                        Next
+                        {
+                            stage === 4 ? "Deploy" : stage === 3 ? "Store" : "Next"
+                        }
                     </button>
                 </div>
             </div>
