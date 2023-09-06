@@ -1,4 +1,4 @@
-import { ChangeEvent, useContext, useRef, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { PlusSquareOutlined } from "@ant-design/icons";
@@ -35,13 +35,47 @@ export default function CreateCollectibleView() {
 
     const { state, dispatch } = useContext(CollectionContext);
 
+    useEffect(() => {
+        if (!stage || !state) return;
+
+        const newQueryParam: any = {
+            ...router.query,
+        }
+
+        if (stage === 1) {
+            newQueryParam.contractType = state.contractType;
+        } else if (stage === 2) {
+            newQueryParam.blockchain = state.blockchain;
+        } else if (stage === 3) {
+            newQueryParam.overview = "empty"
+        } else if (stage === 4) {
+            newQueryParam.overview = "filled"
+        }
+
+        router.replace({
+            pathname: router.pathname,
+            query: newQueryParam,
+        });
+
+    }, [stage, state]);
+
+    function handlePrevButtonAction() {
+        if (stage <= 1) return;
+        setStage((stage) => stage - 1);
+    }
+
+    function handleNextButtonAction() {
+        if (stage >= 4) return;
+        setStage((stage) => stage + 1);
+    }
+
     return (
-        <div className="h-full w-full">
-            <div className="h-full flex flex-col justify-between bg-[#ECEFF4]">
-                <div className="flex justify-center items-center overflow-y-auto">
+        <div className="h-full flex flex-row w-full">
+            <div className="flex flex-col justify-between bg-[#ECEFF4] bg-yellow-100 w-full">
+                <div className="flex justify-center items-center overflow-y-auto bg-green-100 h-full">
                     {
                         stage === 1 ? (
-                            <div className="h-full">
+                            <div className="">
                                 <p className="text-md text-center mb-4"> Contract Type </p>
                                 <select 
                                     onChange={(e) => {
@@ -61,7 +95,7 @@ export default function CreateCollectibleView() {
                                 </select>
                             </div>
                         ) : stage === 2 ? (
-                            <div className="h-full">
+                            <div className="">
                                 <p className="text-md text-center mb-4"> Blockchain </p>
                                 <select
                                     onChange={(e) => {
@@ -82,37 +116,25 @@ export default function CreateCollectibleView() {
                                 </select>
                             </div>
                         ) : stage === 3 ? (
-                            <div className="box-border h-full">
-                                <CreateCollection />
-                            </div>
+                            <CreateCollection />
                         ) : stage === 4 ? (
-                            <div className="h-full">
                                 <CollectionOverview />
-                            </div>
                         ) : (
-                            <div className="h-full">
-                                <CreateERC721Collectible />
+                            <div>
+                                <p> Hello from the w0rl </p>
                             </div>
                         )
                     }
                 </div>
-                <div className="flex justify-between items-center pb-6">
+                <div className="flex justify-between items-center py-3 bg-blue-100">
                     <button 
-                        onClick={() => {
-                            if (stage > 1) {
-                                setStage((stage) => stage - 1);
-                            }
-                        }}
+                        onClick={handlePrevButtonAction}
                         className="bg-gray-800 hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 text-white font-semibold py-2 px-6 rounded shadow-md transition duration-300 ease-in-out"
                     >
                         Prev
                     </button>
                     <button 
-                        onClick={() => {
-                            if (stage < 5) {
-                                setStage((stage) => stage + 1);
-                            }
-                        }}
+                        onClick={handleNextButtonAction}
                         className="bg-gray-800 hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 text-white font-semibold py-2 px-6 rounded shadow-md transition duration-300 ease-in-out"
                     >
                         Next

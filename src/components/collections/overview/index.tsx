@@ -49,13 +49,13 @@ export default function CollectionOverview() {
     }
 
     return (
-        <div className="w-full h-full box">
+        <div className="w-full h-[100%] bg-green-100">
             <p className="text-2xl"> { collectionState?.data.name } </p>
             <p className="text-sm my-3"> Up to this point you can perform any of the following actions </p>
             <div className="mt-5">
                 {/* ==> COLLECTION OPTIONS <== */}
-                <div className="grid grid-cols-2 grid-rows-auto gap-5">
-                    <div className="bg-white shadow-md rounded-md p-6">
+                <div className="grid grid-cols-2 grid-rows-auto gap-5 bg-red-200">
+                        <div className="bg-white shadow-xs rounded-md p-6 h-[100%] flex flex-col items-start justify-between">
                         <div className="mb-4">
                             <h2 className="my-1 text-md font-semibold"> Add collectibles to your collection </h2>
                             <p className="text-sm text-gray-600"> Be it manually or in a near automated way by minting them </p>
@@ -77,10 +77,10 @@ export default function CollectionOverview() {
                     {
                         (!collectionState?.isStored && !collectionState?.isDeployed) ||
                         (collectionState?.isStored && !collectionState?.isDeployed) ? (
-                        <div className="bg-white shadow-md rounded-md p-6">
+                        <div className="bg-white shadow-xs rounded-md p-6 h-[15rem] flex flex-col items-start justify-between">
                             <div className="mb-4">
-                                <h2 className="text-md font-semibold">Deploy later</h2>
-                                <p className="text-sm text-gray-600">The collection will be stored in a centralized database until you decide to launch it</p>
+                                <h2 className="text-md font-semibold">Add collectibles later</h2>
+                                <p className="text-sm text-gray-600">You can come any time you want, add collectibles and edit your contract data before deploying it to a blockchain.</p>
                             </div>
                             <div>
                                 <button 

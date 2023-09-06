@@ -1,4 +1,5 @@
 import { SET_COLLECTIBLE_DATA, SET_COLLECTIBLE_METADATA } from "@/actions/collectible.actions";
+import Button from "@/components/shared/Button";
 import { CollectiblesContext } from "@/context/CollectibleContext/CollectibleContext";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
@@ -102,6 +103,10 @@ export function CreateERC721Collectible() {
         });
     }
 
+    async function handleAddCollectible() {
+        console.log("Will save this stupid data");
+    }
+
     return (
         <div className="flex gap-5">
             <div className="w-full mx-[60px]">
@@ -115,8 +120,8 @@ export function CreateERC721Collectible() {
                     <div className="relative h-[22rem] w-[22rem] bg-red-100 rounded-lg" ref={itemPictureRef}>
                     </div>
                 </div>
-                <div className="">
-                    <div className="flex flex-col items-start justify-between">
+                <div className="mb-6">
+                    <div className="flex my-6 flex-col items-start justify-between">
                         <div className="mt-6 w-full">
                             <p className="text-sm mb-2 font-bold"> Name </p>
                             <input
@@ -229,6 +234,7 @@ export function CreateERC721Collectible() {
                             </div>
                         </div>
                     </div>
+                    <Button text="Save" onClick={handleAddCollectible} />
                 </div>
             </div>
         </div>
