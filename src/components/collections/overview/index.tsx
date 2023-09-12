@@ -41,14 +41,6 @@ export default function CollectionOverview() {
         console.log(tx);
     }
     
-    // Store the collection's data at a db with an api call
-    async function handleDeployCollectionLater() {
-        if (errors && Object.keys(errors)?.length) {
-            // ? > Display a toaster indicating there's something missing
-            return;
-        }
-    }
-
     return (
         <div className="w-full h-full flex flex-col justify-start">
             <p className="text-2xl"> { collectionState?.data.name } </p>

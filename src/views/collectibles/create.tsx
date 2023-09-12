@@ -9,6 +9,8 @@ import { CollectiblesContext } from "@/context/CollectibleContext/CollectibleCon
 import { SET_SMC_CHAIN, SET_SMC_DATA, SET_SMC_TYPE } from "@/actions/collections.actions";
 import { SmartContractChain } from "@/types/smart-contrat.types";
 import CollectionOverview from "@/components/collections/overview";
+import { CreateCollectionDTO, storeCollection } from "@/services/api/collections.service";
+import { useAuth } from "@/context/AuthContext/AuthContext";
 
 type CollectionType = "ERC721" | "ERC1155";
 
@@ -34,7 +36,8 @@ export default function CreateCollectibleView() {
     const searchParams = useSearchParams()!;
 
     const { state, dispatch } = useContext(CollectionContext);
-
+    const { state: { data: { user } } } = useAuth();
+ 
     useEffect(() => {
         if (!stage || !state) return;
 
@@ -46,7 +49,7 @@ export default function CreateCollectibleView() {
             newQueryParam.contractType = state.contractType;
         } else if (stage === 2) {
             newQueryParam.blockchain = state.blockchain;
-        } else if (stage === 3) {
+        } else if (stage === 3) {   
             newQueryParam.overview = "empty"
         } else if (stage === 4) {
             newQueryParam.overview = "filled"
@@ -64,10 +67,30 @@ export default function CreateCollectibleView() {
         setStage((stage) => stage - 1);
     }
 
-    function handleNextButtonAction() {
+    async function handleNextButtonAction() {
         if (stage > 4) return;
         else if (stage === 3) {
             if (!confirm("Is your collection data ok ?")) return;
+
+            const createCollectionPayload: CreateCollectionDTO = {
+                address: null,
+                collectionMetadata: null,
+                wallet: "0x89ACF29bEED95eF65206118c6a44009fAb6D2776",
+                contractType: state.contractType,
+                contractData: state.data,
+                metadata: state.metadata,
+                isDeployed: false,
+            }
+
+            try {
+                const resData = await storeCollection(createCollectionPayload);
+
+                console.log(resData);
+
+            } catch (error) {
+                console.error("===> Error");
+                console.error(error);
+            }
         }
         else if (stage === 4) {
             if(!confirm("Do you want to deploy your collection ?")) return;
