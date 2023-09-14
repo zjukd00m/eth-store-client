@@ -1,26 +1,26 @@
-import {
-  CollectibleERC721,
-  CollectibleERC721State,
-} from "@/types/collections.types";
+import { CollectibleERC, CollectibleERCState } from "@/types/collections.types";
 
-export const initialCollectionContextData: CollectibleERC721 = {
+export const initialCollectionContextData: CollectibleERC = {
   baseURI: "",
   name: "",
   symbol: "",
   maxSupply: 0,
-  preMintPrice: "",
-  preMintStartDate: "",
-  preMintEndDate: "",
+  preMintPrice: "0",
+  preMintStartDate: "0",
+  preMintEndDate: "0",
   maxPreMintCollectibles: 0,
   maxPreMintCollectiblesPerWallet: 0,
-  publicMintPrice: "",
-  publicMintStartDate: "",
+  publicMintPrice: "0",
+  publicMintStartDate: "0",
   maxCollectiblesPerWallet: 0,
 };
 
-export const initialCollectionContextState: CollectibleERC721State = {
+export const initialCollectionContextState: CollectibleERCState = {
   data: initialCollectionContextData,
   contractType: "ERC721",
   metadata: null,
   blockchain: "ETHEREUM",
+  errors: {},
+  isDeployed: false,
+  isStored: false,
 };

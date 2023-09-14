@@ -1,8 +1,8 @@
-import { CollectibleERC721State } from "@/types/collections.types";
+import { CollectibleERCState } from "@/types/collections.types";
 import { SET_SMC_DATA, SET_SMC_TYPE, SET_SMC_METADATA, SET_SMC_CHAIN, RESET_SMC_STATE } from "../../actions/collections.actions";
 import { initialCollectionContextState } from "@/context/CollectionContext/collection.contants";
 
-export default function collectionsReducer(state: CollectibleERC721State, action: any) {
+export default function collectionsReducer(state: CollectibleERCState, action: any) {
     switch (action.type) {
         case SET_SMC_DATA:
             return {

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Dropdown from "@/components/shared/Dropdown";
 import { GlobalLayoutProps } from "./interfaces";
-import useAuth from "@/hooks/AuthHook";
 import { FileProtectOutlined, FolderOutlined, HomeOutlined, PoweroffOutlined, UserOutlined } from "@ant-design/icons";
+import { useAuth } from "@/context/AuthContext/AuthContext";
 
 const sidebarItems = [
   {
@@ -11,19 +11,20 @@ const sidebarItems = [
     icon: <HomeOutlined className="text-[14px]" />
   },
   {
-    name: "Items",
-    url: "/items",
+    name: "Collections",
+    url: "/collections",
     options: [
-      { name: "all", url: "" },
+      { name: "overview", url: "/" },
+      { name: "deployed", url: "/deployed" },
       { name: "create", url: "/create" },
     ],
     icon: <FolderOutlined className="text-[22px]" />,
   },
   {
     name: "Collectibles",
-    url: "/collectibles",
+    url: "/collections",
     options: [
-      { name: "all", url: "" },
+      { name: "overview", url: "/" },
       { name: "deployed", url: "/deployed" },
       { name: "create", url: "/create" },
     ],
@@ -42,7 +43,7 @@ const sidebarItems = [
 
 export default function GlobalLayout(props: GlobalLayoutProps) {
   const { children } = props;
-  const { isAuthenticated } = useAuth();
+  const { state: { isAuthenticated } } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
@@ -114,8 +115,9 @@ export default function GlobalLayout(props: GlobalLayoutProps) {
         <div className={`
           px-[60px] 
           pt-[20px] 
-          w-full 
+          w-full
           overflow-y-auto
+          bg-cyan-300
           ${isSidebarOpen ? "col-span-10" : "col-span-11"}
         `}>{children}</div>
       </div>

@@ -1,3 +1,4 @@
+import CollectionsLayout from "@/app/collections/layout";
 import GlobalLayout from "@/app/layout";
 import CollectiblesContextProvider from "@/context/CollectibleContext/CollectibleContext";
 import CollectionContextProvider from "@/context/CollectionContext/CollectionContext";
@@ -8,7 +9,9 @@ export default function CreateCollectible() {
         <GlobalLayout>
             <CollectionContextProvider>
                 <CollectiblesContextProvider>
-                    <CreateCollectibleView />
+                    <CollectionsLayout>
+                        <CreateCollectibleView />
+                    </CollectionsLayout>
                 </CollectiblesContextProvider>
             </CollectionContextProvider>
         </GlobalLayout>

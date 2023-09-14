@@ -1,5 +1,7 @@
+import { CollectibleState } from "@/types/collectibles.types";
+
 // Max file size is 100MB
-export const initialCollectiblesContextState = {
+export const initialCollectiblesContextState: CollectibleState = {
   data: {
     name: "",
     description: "",
@@ -10,4 +12,5 @@ export const initialCollectiblesContextState = {
     youtube_url: "",
     attributes: [],
   },
+  errors: {},
 };

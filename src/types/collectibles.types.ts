@@ -21,6 +21,7 @@ export interface CollectibleAttributes {
 
 export interface CollectibleState {
   data: Collectible;
+  errors: Record<string, string>;
 }
 
 // Interface taken from OpenSea at https://docs.opensea.io/docs/metadata-standards
@@ -34,3 +35,31 @@ export interface Collectible {
   animation_url?: string;
   youtube_url?: string;
 }
+
+// Where the value is a UNIX timestamp in seconds
+export interface DateTrait {
+  display_type: "date";
+  trait_type: string;
+  value: number;
+}
+
+export interface BoostTrait {
+  display_type: "boost_percentage" | "boost_number";
+  trait_type: string;
+}
+
+export interface StatTrait {
+  trait_type: string;
+  value: number;
+  max_value?: number;
+}
+
+export interface PropertyTrait {
+  value: string;
+}
+
+export type CollectibleTrait =
+  | DateTrait
+  | BoostTrait
+  | StatTrait
+  | PropertyTrait;
