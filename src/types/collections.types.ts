@@ -1,3 +1,4 @@
+import { CollectionMetadata } from "@/services/api/collections.service";
 import {
   SmartContractChain,
   SmartContractData,
@@ -26,7 +27,7 @@ export interface CollectibleERCState {
   data: CollectibleERC;
   contractType: SmartContractType;
   blockchain: SmartContractChain;
-  metadata?: Record<string, any> | null;
+  metadata?: CollectionMetadata | null;
   errors?: Record<string, string>;
   isDeployed: boolean;
   isStored: boolean;

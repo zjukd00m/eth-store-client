@@ -6,6 +6,10 @@ module.exports = {
       colors: {
         input: "#D8DEE9",
       },
+      backgroundColor: {
+        "creative-idea-light":
+          "url(/assets/absurd.design - Chapter 1 - 08.png)",
+      },
     },
   },
   plugins: [],

@@ -11,6 +11,7 @@
   --text-title: "Victor Mono", monospace;
   --bg-dracula-green: #50fa7b;
   --bg-border: #44475a;
+  --text-cool-color: #3f3f46;
 }
 
 @media (prefers-color-scheme: dark) {

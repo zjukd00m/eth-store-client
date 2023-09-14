@@ -117,7 +117,6 @@ export default function GlobalLayout(props: GlobalLayoutProps) {
           pt-[20px] 
           w-full
           overflow-y-auto
-          bg-cyan-300
           ${isSidebarOpen ? "col-span-10" : "col-span-11"}
         `}>{children}</div>
       </div>
