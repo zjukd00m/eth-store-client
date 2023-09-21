@@ -1,3 +1,5 @@
-export const getHeaders = () => ({
-  "Content-Type": "application/json",
-});
+export const getHeaders = () => {
+  return {
+    "Content-Type": "application/json",
+  };
+};

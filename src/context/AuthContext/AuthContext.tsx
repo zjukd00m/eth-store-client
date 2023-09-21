@@ -3,17 +3,21 @@ import { initialAuthState } from "./auth.constants";
 import authReducer from "@/reducers/auth/auth.reducer";
 import { AuthState } from "@/types/auth.types";
 import { RESET_STATE, SET_USER } from "@/actions/auth.actions";
+import { clearUserSession, registerUserToDb } from "@/services/api/auth.service";
+import useStorageHook from "@/hooks/StorageHoook";
 
 const AuthContext = createContext<{
   state: AuthState;
   dispatch: Dispatch<any>,
   locked: boolean;
   login: () => Promise<void>;
+  logout: () => Promise<void>;
 }>({
   state: initialAuthState,
   dispatch: () => null,
   locked: false,
   login: () => Promise.resolve(),
+  logout: () => Promise.resolve(),
 });
 
 export default function AuthContextProvider({ children }: {
@@ -21,6 +25,11 @@ export default function AuthContextProvider({ children }: {
 }) {
   const [state, dispatch] = useReducer(authReducer, initialAuthState);
   const [locked, setLocked] = useState(false);
+  const { 
+    get: getStorageItem, 
+    store: setStorageItem, 
+    clear: clearStorageItems 
+  } = useStorageHook();
 
   // Lock the context functionality when metamask is not installed
   // useEffect(() => {
@@ -53,38 +62,63 @@ export default function AuthContextProvider({ children }: {
           if (!accounts?.length)
             dispatch({
               type: RESET_STATE,
-              payload: {
-                wallet: accounts[0],
-              }
             });
       });
   }, [locked]);
 
     async function login() {
-      console.log("----")
-      console.log("heree")
-      console.log({ locked })
-      if (locked) return;
-      try {
-        // Request the wallet sign in with metamask
-        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
 
-        dispatch({
-          type: SET_USER,
-          payload: {
-            wallet: accounts[0],
-          },
-        });
-      } catch (error: any) {
-        if (error.code === 4001) {
-            console.log("Connect to metamask");
-        } else {
-            console.error(error.message);
-        }
+      if (locked) return;
+      // Request the wallet sign in with metamask
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+
+      // If more than one wallet is selected, the first one will be used by default
+      const wallet = accounts[0];
+
+      const authContextPayload = {
+        wallet,
+        email: null,
+        confirmed: false,
+        registered: false,
       }
+
+      const registered = await registerUserToDb(wallet)
+        .then((data) => {
+          if (data) {
+            const { token } = data;
+            return setStorageItem("token", { token }, true);
+          } else {
+            console.log("Error while logging...");
+            console.log(data);
+            return false;
+          }
+        });
+
+      authContextPayload.registered = registered
+
+      dispatch({
+        type: SET_USER,
+        payload: authContextPayload,
+      });
     }
 
-  return <AuthContext.Provider value={{state, dispatch, locked, login}}>{children}</AuthContext.Provider>;
+    async function logout() {
+      const tokenData = getStorageItem("key");
+
+      if (!tokenData) {
+        throw new Error("There is no user token");
+      }
+
+      await clearUserSession(tokenData.token)
+        .then((data) => {
+          console.log("LOGOUT RESPONSE");
+          console.log(data);
+        });
+
+      clearStorageItems();
+    }
+
+  return <AuthContext.Provider value={{state, dispatch, locked, login, logout}}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => {

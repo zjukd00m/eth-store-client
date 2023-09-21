@@ -1,5 +1,4 @@
-import axios from "axios";
-import { getHeaders } from "./constants";
+import { Axios } from ".";
 import { SmartContractType } from "@/types/smart-contrat.types";
 import { CollectibleERC } from "@/types/collections.types";
 
@@ -27,23 +26,6 @@ export interface CreateCollectionDTO {
   //
   isDeployed?: boolean;
 }
-
-const Axios = axios.create({
-  baseURL: "http://localhost:8098/api",
-  timeout: 5000,
-  headers: {
-    ...getHeaders(),
-  },
-});
-
-Axios.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  (error: any) => {
-    Promise.reject(error);
-  }
-);
 
 export const storeCollection = async (data: CreateCollectionDTO) => {
   try {

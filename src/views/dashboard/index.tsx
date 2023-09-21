@@ -1,12 +1,21 @@
 import { useAuth } from "@/context/AuthContext/AuthContext";
 
 export default function Dashboard() {
-  const { state: { isAuthenticated }, login, dispatch, locked } = useAuth();
+  const { state: { isAuthenticated }, login, dispatch, locked, logout } = useAuth();
 
   async function handleConnectWallet() {
     if (isAuthenticated) return;
     try {
       await login();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function handleDisconnectWallet() {
+    if (!isAuthenticated) return;
+    try {
+      await logout();
     } catch (error) {
       console.error(error);
     }
@@ -59,7 +68,18 @@ export default function Dashboard() {
               Connect Wallet
             </button>
           ) : (
-            <p> Disconnect your wallet </p>
+            <button
+              style={{
+                marginTop: "200px",
+                borderRadius: "10px",
+                backgroundColor: "var(--bg-dracula-green)",
+                padding: "0.5rem 1rem",
+                border: "1px solid var(--bg-border)",
+              }}
+              onClick={handleDisconnectWallet}
+            >
+              Disconnect Wallet
+            </button>
           )
         }
     </div>
