@@ -82,11 +82,24 @@ export default function AuthContextProvider({ children }: {
         registered: false,
       }
 
-      const registered = await registerUserToDb(wallet)
+      // Generate a message to be signed by the user
+      const message = "Sign the message to authenticate into the app's backend server";
+
+      // Sign the message using the user's wallet
+      const signature = await window.ethereum.request({
+        method: "personal_sign",
+        params: [message, wallet],
+      });
+
+      const registered = await registerUserToDb({
+        wallet,
+        message,
+        signature,
+      })
         .then((data) => {
           if (data) {
-            const { token } = data;
-            return setStorageItem("token", { token }, true);
+            const { accessToken } = data;
+            return setStorageItem("token", { token: accessToken }, true);
           } else {
             console.log("Error while logging...");
             console.log(data);

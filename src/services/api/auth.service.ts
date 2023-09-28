@@ -1,8 +1,16 @@
 import { Axios } from ".";
 import { getHeaders } from "./constants";
 
-export const registerUserToDb = async (wallet: string) =>
-  Axios.post("/auth/login", JSON.stringify({ wallet }))
+export const registerUserToDb = async ({
+  wallet,
+  message,
+  signature,
+}: {
+  wallet: string;
+  message: string;
+  signature: string;
+}) =>
+  Axios.post("/auth/login", JSON.stringify({ message, signature, wallet }))
     .then((response) => {
       const data = response.data;
       const status = response.status;

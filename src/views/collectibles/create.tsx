@@ -11,6 +11,7 @@ import { SmartContractChain } from "@/types/smart-contrat.types";
 import CollectionOverview from "@/components/collections/overview";
 import { CreateCollectionDTO, storeCollection } from "@/services/api/collections.service";
 import { useAuth } from "@/context/AuthContext/AuthContext";
+import useStorageHook from "@/hooks/StorageHoook";
 
 type CollectionType = "ERC721" | "ERC1155";
 
@@ -37,6 +38,7 @@ export default function CreateCollectibleView() {
 
     const { state, dispatch } = useContext(CollectionContext);
     const { state: { data: { user } } } = useAuth();
+    const storage = useStorageHook();
  
     useEffect(() => {
         if (!stage || !state) return;
@@ -72,18 +74,22 @@ export default function CreateCollectibleView() {
         else if (stage === 3) {
             if (!confirm("Is your collection data ok ?")) return;
 
+            const token = storage.get("token");
+
+            if (!token) {
+                throw new Error("Token not found");
+            }
+
             const createCollectionPayload: CreateCollectionDTO = {
                 address: null,
                 collectionMetadata: null,
-                wallet: "0x89ACF29bEED95eF65206118c6a44009fAb6D2776",
                 contractType: state.contractType,
                 contractData: state.data,
                 metadata: state.metadata,
-                isDeployed: false,
             }
 
             try {
-                const resData = await storeCollection(createCollectionPayload);
+                const resData = await storeCollection(createCollectionPayload, token.token);
 
                 console.log(resData);
 
